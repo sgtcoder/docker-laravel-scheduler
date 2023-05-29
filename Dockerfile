@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget nano vim g
     install-php-extensions bcmath exif gd gettext imagick intl pdo_mysql zip && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
+## Symlink for Node ##
 RUN ln -s /usr/bin/node /usr/local/bin/node
 
 ## User Permissions ##
@@ -28,4 +29,3 @@ WORKDIR /var/www/laravel
 
 ## Run our worker ##
 CMD ["php", "/var/www/laravel/artisan", "schedule:work"]
-
