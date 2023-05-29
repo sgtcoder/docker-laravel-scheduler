@@ -1,8 +1,16 @@
 ## Set our base image ##
 FROM php:8-cli
 
+## COPY Composer ##
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+## Install PHP Extension Installer ##
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions
+
 ## Install Packages and Extensions and Cleanup ##
-RUN apt-get update && apt-get install -y --no-install-recommends wget curl dpkg-dev nano vim git unzip zip && \
+RUN apt-get update && apt-get install -y --no-install-recommends wget nano && \
+    install-php-extensions bcmath exif gd gettext imagick intl pdo_mysql zip && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 ## User Permissions ##
