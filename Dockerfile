@@ -9,9 +9,14 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions
 
 ## Install Packages and Extensions and Cleanup ##
-RUN apt-get update && apt-get install -y --no-install-recommends wget nano && \
+RUN apt-get update && apt-get install -y --no-install-recommends wget nano vim git && \
+    curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install npm@latest -g && \
     install-php-extensions bcmath exif gd gettext imagick intl pdo_mysql zip && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+
+RUN ln -s /usr/bin/node /usr/local/bin/node
 
 ## User Permissions ##
 ARG user_id=1000
@@ -23,3 +28,4 @@ WORKDIR /var/www/laravel
 
 ## Run our worker ##
 CMD ["php", "/var/www/laravel/artisan", "schedule:work"]
+
